@@ -3,9 +3,7 @@
 > **Plateforme de data science de bout en bout sur la marketplace brésilienne Olist** : une **API FastAPI** qui sert trois modèles (durée de livraison, risque de retard, segmentation clients) et un **tableau de bord Streamlit** qui la consomme.
 > *End-to-end data science platform on the Olist Brazilian marketplace: a FastAPI backend serving three models (delivery time, late-delivery risk, customer segmentation) and a Streamlit dashboard consuming it.*
 
-![CI](https://github.com/<votre-compte>/ecommerce-intelligence-platform/actions/workflows/ci.yml/badge.svg)
 
-<!-- Ajouter ici les captures : docs/images/kpi.png, modele1.png, modele2.png, modele3.png, api-docs.png -->
 
 ## Le problème
 
@@ -242,7 +240,3 @@ coûts et efficacité des alertes non mesurés sur des données réelles.
 ## Données et licence
 
 Données : *Brazilian E-Commerce Public Dataset by Olist* (Kaggle, licence CC BY-NC-SA 4.0 : usage non commercial). Code : licence MIT.
-
-## Auteur
-
-*Votre nom* · [LinkedIn](https://www.linkedin.com/) · [Portfolio](https://github.com/)
