@@ -1,0 +1,6 @@
+# Interface seule (conteneur « app ») : elle ne parle à l'API que par HTTP
+streamlit>=1.50
+plotly>=5.20
+httpx>=0.27
+pandas>=2.0
+numpy>=1.24

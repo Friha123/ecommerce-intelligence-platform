@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Installer les dépendances
+        run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check src app tests scripts
+      - name: Tests (API + interface, jeu de démonstration)
+        run: python -m pytest -q
+      - name: Le contrat OpenAPI versionné est à jour
+        run: |
+          python scripts/export_openapi.py
+          git diff --exit-code docs/openapi.json
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire les deux images
+        run: |
+          docker build -f Dockerfile.api -t eci-api .
+          docker build -f Dockerfile.app -t eci-app .

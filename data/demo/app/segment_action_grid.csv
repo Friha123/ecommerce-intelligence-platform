@@ -1,0 +1,10 @@
+segment_experience,value_tier,clients,action
+Expérience moyenne,valeur faible,382,Communication standard
+Expérience moyenne,valeur moyenne,490,Communication standard
+Expérience moyenne,valeur élevée,631,Communication standard
+"Expérience moyenne, livraison longue",valeur faible,318,Suivi de la satisfaction ; communication proactive sur les délais
+"Expérience moyenne, livraison longue",valeur moyenne,201,Suivi de la satisfaction ; communication proactive sur les délais
+"Expérience moyenne, livraison longue",valeur élevée,43,Suivi de la satisfaction ; communication proactive sur les délais
+Insatisfaits par la livraison,valeur faible,8,Message d'excuse et bon d'achat
+Insatisfaits par la livraison,valeur moyenne,17,Message d'excuse et bon d'achat
+Insatisfaits par la livraison,valeur élevée,34,Geste commercial prioritaire et appel de suivi

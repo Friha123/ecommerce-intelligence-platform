@@ -1,0 +1,2240 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "E-Commerce Intelligence Platform API",
+    "description": "\nAPI du projet **E-Commerce Intelligence Platform** (marketplace Olist).\n\n* **KPI** : indicateurs logistiques filtrables (période, états).\n* **Modèle 1** : promesse de livraison par quantile et prédiction de durée.\n* **Modèle 2** : pilotage des alertes de retard (capacité, coûts, rentabilité) et score de risque.\n* **Modèle 3** : segments de clients, grille d'actions, ciblage.\n\nToutes les routes métier sont sous `/api/v1`. Si `ECI_API_KEY` est définie, l'en-tête `X-API-Key` est requis.\n",
+    "contact": {
+      "name": "E-Commerce Intelligence Platform"
+    },
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Santé"
+        ],
+        "summary": "État du service",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "tags": [
+          "Méta"
+        ],
+        "summary": "Métadonnées des jeux de données et des modèles",
+        "operationId": "meta_api_v1_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/options": {
+      "get": {
+        "tags": [
+          "Méta"
+        ],
+        "summary": "Valeurs proposées dans les formulaires",
+        "operationId": "options_api_v1_options_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptionsOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/kpi/filters": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Mois et états disponibles",
+        "operationId": "filters_api_v1_kpi_filters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiFiltersOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/kpi/summary": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Indicateurs de la période et de la période précédente",
+        "operationId": "summary_api_v1_kpi_summary_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Codes d'états du client ; vide = tous",
+              "default": [],
+              "title": "States"
+            },
+            "description": "Codes d'états du client ; vide = tous"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiSummaryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kpi/trend": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Évolution mensuelle (commandes, chiffre d'affaires, durée, retards)",
+        "operationId": "trend_api_v1_kpi_trend_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Codes d'états du client ; vide = tous",
+              "default": [],
+              "title": "States"
+            },
+            "description": "Codes d'états du client ; vide = tous"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Trend Api V1 Kpi Trend Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kpi/states": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Indicateurs par état du client",
+        "operationId": "by_state_api_v1_kpi_states_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Codes d'états du client ; vide = tous",
+              "default": [],
+              "title": "States"
+            },
+            "description": "Codes d'états du client ; vide = tous"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response By State Api V1 Kpi States Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kpi/insights": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Constats automatiques en français",
+        "operationId": "insights_api_v1_kpi_insights_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Codes d'états du client ; vide = tous",
+              "default": [],
+              "title": "States"
+            },
+            "description": "Codes d'états du client ; vide = tous"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Insights Api V1 Kpi Insights Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/kpi/histogram": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Histogramme des durées réelle et promise (jours)",
+        "operationId": "histogram_api_v1_kpi_histogram_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Histogram Api V1 Kpi Histogram Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/kpi/centroids": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Centroïdes géographiques des états",
+        "operationId": "centroids_api_v1_kpi_centroids_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Centroids Api V1 Kpi Centroids Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/kpi/satisfaction": {
+      "get": {
+        "tags": [
+          "KPI"
+        ],
+        "summary": "Note moyenne selon le retard vécu",
+        "operationId": "satisfaction_api_v1_kpi_satisfaction_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Satisfaction Api V1 Kpi Satisfaction Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/delivery/simulator": {
+      "get": {
+        "tags": [
+          "Modèle 1 · Durée de livraison"
+        ],
+        "summary": "Compromis durée promise / taux de retard pour chaque quantile",
+        "operationId": "simulator_api_v1_delivery_simulator_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Simulator Api V1 Delivery Simulator Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/delivery/simulator/compare": {
+      "get": {
+        "tags": [
+          "Modèle 1 · Durée de livraison"
+        ],
+        "summary": "Un niveau de prudence comparé à la promesse d'Olist",
+        "operationId": "compare_api_v1_delivery_simulator_compare_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quantile",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "exclusiveMaximum": 1,
+              "exclusiveMinimum": 0,
+              "description": "Quantile promis (ex. 0.9)",
+              "default": 0.9,
+              "title": "Quantile"
+            },
+            "description": "Quantile promis (ex. 0.9)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromiseComparisonOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/delivery/performance": {
+      "get": {
+        "tags": [
+          "Modèle 1 · Durée de livraison"
+        ],
+        "summary": "Erreur du modèle et des baselines (évaluation glissante et test statique)",
+        "operationId": "performance_api_v1_delivery_performance_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Performance Api V1 Delivery Performance Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/delivery/predict": {
+      "post": {
+        "tags": [
+          "Modèle 1 · Durée de livraison"
+        ],
+        "summary": "Prédire la durée de livraison d'une commande",
+        "operationId": "predict_api_v1_delivery_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryPredictionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Saisie invalide ou état inconnu"
+          },
+          "503": {
+            "description": "Modèle non installé"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/risk/steering": {
+      "get": {
+        "tags": [
+          "Modèle 2 · Risque de retard"
+        ],
+        "summary": "Pilotage : métriques et bénéfice net pour une capacité et des coûts donnés",
+        "operationId": "steering_api_v1_risk_steering_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "capacity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 0.5,
+              "minimum": 0.005,
+              "description": "Part des commandes signalées (0,10 = 10 %)",
+              "default": 0.1,
+              "title": "Capacity"
+            },
+            "description": "Part des commandes signalées (0,10 = 10 %)"
+          },
+          {
+            "name": "cost_fn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 1000,
+              "exclusiveMinimum": 0,
+              "description": "Coût d'un retard non traité",
+              "default": 5.0,
+              "title": "Cost Fn"
+            },
+            "description": "Coût d'un retard non traité"
+          },
+          {
+            "name": "cost_fp",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 1000,
+              "exclusiveMinimum": 0,
+              "description": "Coût d'une fausse alerte",
+              "default": 1.0,
+              "title": "Cost Fp"
+            },
+            "description": "Coût d'une fausse alerte"
+          },
+          {
+            "name": "prevent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 1,
+              "exclusiveMinimum": 0,
+              "description": "Part des retards alertés réellement évités",
+              "default": 1.0,
+              "title": "Prevent"
+            },
+            "description": "Part des retards alertés réellement évités"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SteeringOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/risk/top-orders": {
+      "get": {
+        "tags": [
+          "Modèle 2 · Risque de retard"
+        ],
+        "summary": "Commandes à surveiller en priorité (JSON ou CSV)",
+        "operationId": "top_orders_api_v1_risk_top_orders_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "capacity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 0.5,
+              "minimum": 0.005,
+              "description": "Part des commandes signalées (0,10 = 10 %)",
+              "default": 0.1,
+              "title": "Capacity"
+            },
+            "description": "Part des commandes signalées (0,10 = 10 %)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 1,
+              "default": 200,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string",
+              "default": "json",
+              "title": "Format"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/risk/reliability": {
+      "get": {
+        "tags": [
+          "Modèle 2 · Risque de retard"
+        ],
+        "summary": "Fiabilité du score dans le temps et comparaison des approches",
+        "operationId": "reliability_api_v1_risk_reliability_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "capacity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 0.5,
+              "minimum": 0.005,
+              "description": "Part des commandes signalées (0,10 = 10 %)",
+              "default": 0.1,
+              "title": "Capacity"
+            },
+            "description": "Part des commandes signalées (0,10 = 10 %)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Reliability Api V1 Risk Reliability Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/risk/score": {
+      "post": {
+        "tags": [
+          "Modèle 2 · Risque de retard"
+        ],
+        "summary": "Score de risque d'une commande",
+        "operationId": "score_api_v1_risk_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskScoreOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Saisie invalide ou état inconnu"
+          },
+          "503": {
+            "description": "Modèle non disponible"
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/segments/overview": {
+      "get": {
+        "tags": [
+          "Modèle 3 · Segments clients"
+        ],
+        "summary": "Segments, profils et répartition par région",
+        "operationId": "overview_api_v1_segments_overview_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Overview Api V1 Segments Overview Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/segments/grid": {
+      "get": {
+        "tags": [
+          "Modèle 3 · Segments clients"
+        ],
+        "summary": "Grille d'actions « expérience × valeur »",
+        "operationId": "grid_api_v1_segments_grid_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Grid Api V1 Segments Grid Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/v1/segments/customers": {
+      "get": {
+        "tags": [
+          "Modèle 3 · Segments clients"
+        ],
+        "summary": "Clients ciblés (filtres, pagination) ; `format=csv` exporte toute la sélection",
+        "operationId": "customers_api_v1_segments_customers_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [],
+              "title": "Region"
+            }
+          },
+          {
+            "name": "value_tier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [],
+              "title": "Value Tier"
+            }
+          },
+          {
+            "name": "segment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [],
+              "title": "Segment"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Valeur élevée et note moyenne <= max_note",
+              "default": false,
+              "title": "Priority"
+            },
+            "description": "Valeur élevée et note moyenne <= max_note"
+          },
+          {
+            "name": "late_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Avec `priority` : seulement les clients touchés par un retard",
+              "default": false,
+              "title": "Late Only"
+            },
+            "description": "Avec `priority` : seulement les clients touchés par un retard"
+          },
+          {
+            "name": "max_note",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 5,
+              "minimum": 1,
+              "default": 2.0,
+              "title": "Max Note"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string",
+              "default": "json",
+              "title": "Format"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomersPage"
+                }
+              },
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/segments/customers/{customer_id}": {
+      "get": {
+        "tags": [
+          "Modèle 3 · Segments clients"
+        ],
+        "summary": "Segment et action d'un client",
+        "operationId": "customer_api_v1_segments_customers__customer_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Customer Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client inconnu"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/segments/methodology": {
+      "get": {
+        "tags": [
+          "Modèle 3 · Segments clients"
+        ],
+        "summary": "Comparaison des variantes de segmentation (η², silhouette, stabilité)",
+        "operationId": "methodology_api_v1_segments_methodology_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Methodology Api V1 Segments Methodology Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CurvePoint": {
+        "properties": {
+          "capacity_pct": {
+            "type": "number",
+            "title": "Capacity Pct"
+          },
+          "net_benefit": {
+            "type": "number",
+            "title": "Net Benefit"
+          },
+          "precision": {
+            "type": "number",
+            "title": "Precision"
+          },
+          "recall": {
+            "type": "number",
+            "title": "Recall"
+          },
+          "lift": {
+            "type": "number",
+            "title": "Lift"
+          }
+        },
+        "type": "object",
+        "required": [
+          "capacity_pct",
+          "net_benefit",
+          "precision",
+          "recall",
+          "lift"
+        ],
+        "title": "CurvePoint"
+      },
+      "CustomerOut": {
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "title": "Customer Id"
+          },
+          "segment": {
+            "type": "string",
+            "title": "Segment"
+          },
+          "value_tier": {
+            "type": "string",
+            "title": "Value Tier"
+          },
+          "recency_tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recency Tier"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "n_orders": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Orders"
+          },
+          "total_spent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Spent"
+          },
+          "avg_order_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Order Value"
+          },
+          "avg_review": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Review"
+          },
+          "avg_delivery_days": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Delivery Days"
+          },
+          "late_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Late Share"
+          },
+          "recency_days": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recency Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "customer_id",
+          "segment",
+          "value_tier",
+          "action"
+        ],
+        "title": "CustomerOut"
+      },
+      "CustomersPage": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "median_spend": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Spend"
+          },
+          "avg_review": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Review"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CustomerOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "offset",
+          "limit",
+          "median_spend",
+          "avg_review",
+          "items"
+        ],
+        "title": "CustomersPage"
+      },
+      "DeliveryPredictionOut": {
+        "properties": {
+          "point_days": {
+            "type": "number",
+            "title": "Point Days",
+            "description": "Durée prévue (médiane), en jours"
+          },
+          "quantiles": {
+            "items": {
+              "$ref": "#/components/schemas/QuantileDays"
+            },
+            "type": "array",
+            "title": "Quantiles",
+            "description": "Promesses possibles par niveau de prudence"
+          },
+          "variant": {
+            "type": "string",
+            "title": "Variant"
+          },
+          "uses_promise": {
+            "type": "boolean",
+            "title": "Uses Promise"
+          }
+        },
+        "type": "object",
+        "required": [
+          "point_days",
+          "quantiles",
+          "variant",
+          "uses_promise"
+        ],
+        "title": "DeliveryPredictionOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HeadlineOut": {
+        "properties": {
+          "orders": {
+            "type": "integer",
+            "title": "Orders"
+          },
+          "revenue": {
+            "type": "number",
+            "title": "Revenue"
+          },
+          "avg_ticket": {
+            "type": "number",
+            "title": "Avg Ticket"
+          },
+          "avg_delivery_days": {
+            "type": "number",
+            "title": "Avg Delivery Days"
+          },
+          "avg_promised_days": {
+            "type": "number",
+            "title": "Avg Promised Days"
+          },
+          "late_rate": {
+            "type": "number",
+            "title": "Late Rate",
+            "description": "Proportion de commandes livrées après la date promise (0-1)"
+          },
+          "on_time_rate": {
+            "type": "number",
+            "title": "On Time Rate"
+          },
+          "avg_gap_days": {
+            "type": "number",
+            "title": "Avg Gap Days",
+            "description": "Promesse moyenne − durée réelle moyenne (positif = en avance)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "orders",
+          "revenue",
+          "avg_ticket",
+          "avg_delivery_days",
+          "avg_promised_days",
+          "late_rate",
+          "on_time_rate",
+          "avg_gap_days"
+        ],
+        "title": "HeadlineOut"
+      },
+      "HealthOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "examples": [
+              "ok"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "demo": {
+            "type": "boolean",
+            "title": "Demo",
+            "description": "True si l'API sert le jeu de démonstration synthétique"
+          },
+          "delivery_model": {
+            "type": "boolean",
+            "title": "Delivery Model",
+            "description": "Modèle de durée (LightGBM) disponible"
+          },
+          "risk_model": {
+            "type": "boolean",
+            "title": "Risk Model",
+            "description": "Modèle de score de risque disponible"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "demo",
+          "delivery_model",
+          "risk_model"
+        ],
+        "title": "HealthOut"
+      },
+      "KpiFiltersOut": {
+        "properties": {
+          "months": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Months"
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/StateOut"
+            },
+            "type": "array",
+            "title": "States"
+          }
+        },
+        "type": "object",
+        "required": [
+          "months",
+          "states"
+        ],
+        "title": "KpiFiltersOut"
+      },
+      "KpiSummaryOut": {
+        "properties": {
+          "period": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Period"
+          },
+          "current": {
+            "$ref": "#/components/schemas/HeadlineOut"
+          },
+          "previous": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HeadlineOut"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Période précédente de même longueur, si l'historique le permet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "period",
+          "current",
+          "previous"
+        ],
+        "title": "KpiSummaryOut"
+      },
+      "MetaOut": {
+        "properties": {
+          "app": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "App"
+          },
+          "delivery": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delivery"
+          },
+          "risk": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Risk"
+          },
+          "segmentation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Segmentation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "app",
+          "delivery",
+          "risk",
+          "segmentation"
+        ],
+        "title": "MetaOut"
+      },
+      "OptionsOut": {
+        "properties": {
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/StateOut"
+            },
+            "type": "array",
+            "title": "States"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories"
+          },
+          "payment_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Payment Types"
+          },
+          "delivery_model_available": {
+            "type": "boolean",
+            "title": "Delivery Model Available"
+          },
+          "delivery_uses_promise": {
+            "type": "boolean",
+            "title": "Delivery Uses Promise"
+          },
+          "risk_scoring_available": {
+            "type": "boolean",
+            "title": "Risk Scoring Available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "states",
+          "categories",
+          "payment_types",
+          "delivery_model_available",
+          "delivery_uses_promise",
+          "risk_scoring_available"
+        ],
+        "title": "OptionsOut"
+      },
+      "OrderInput": {
+        "properties": {
+          "customer_state": {
+            "type": "string",
+            "maxLength": 2,
+            "minLength": 2,
+            "title": "Customer State",
+            "description": "Code de l'état du client (ex. RJ)"
+          },
+          "seller_state": {
+            "type": "string",
+            "maxLength": 2,
+            "minLength": 2,
+            "title": "Seller State",
+            "description": "Code de l'état du vendeur (ex. SP)"
+          },
+          "categorie_grouped": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categorie Grouped",
+            "description": "Catégorie du premier article"
+          },
+          "payment_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Type"
+          },
+          "total_price": {
+            "type": "number",
+            "maximum": 100000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Total Price",
+            "description": "Prix total des articles (R$)"
+          },
+          "total_freight": {
+            "type": "number",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Total Freight",
+            "description": "Frais de port (R$)",
+            "default": 0.0
+          },
+          "total_weight_g": {
+            "type": "number",
+            "maximum": 500000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Total Weight G",
+            "description": "Poids total (g)"
+          },
+          "total_volume_cm3": {
+            "type": "number",
+            "maximum": 5000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Total Volume Cm3",
+            "description": "Volume total (cm³)"
+          },
+          "nb_items": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Nb Items",
+            "default": 1
+          },
+          "purchase_datetime": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purchase Datetime",
+            "description": "Date d'achat (défaut : maintenant)"
+          },
+          "promised_days": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 365.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promised Days",
+            "description": "Promesse actuelle d'Olist (jours)"
+          },
+          "distance_km": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10000.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance Km",
+            "description": "Distance vendeur-client ; sinon estimée entre états"
+          }
+        },
+        "type": "object",
+        "required": [
+          "customer_state",
+          "seller_state",
+          "total_price",
+          "total_weight_g",
+          "total_volume_cm3"
+        ],
+        "title": "OrderInput",
+        "description": "Commande à évaluer. Les informations non fournies sont remplacées par des valeurs typiques.",
+        "example": {
+          "categorie_grouped": "bed_bath_table",
+          "customer_state": "RJ",
+          "nb_items": 1,
+          "payment_type": "credit_card",
+          "promised_days": 24,
+          "purchase_datetime": "2018-06-12T14:30:00",
+          "seller_state": "SP",
+          "total_freight": 25.0,
+          "total_price": 120.0,
+          "total_volume_cm3": 8000,
+          "total_weight_g": 1500
+        }
+      },
+      "PromiseComparisonOut": {
+        "properties": {
+          "quantile": {
+            "type": "number",
+            "title": "Quantile"
+          },
+          "risk_label": {
+            "type": "string",
+            "title": "Risk Label"
+          },
+          "risk_description": {
+            "type": "string",
+            "title": "Risk Description"
+          },
+          "promise_days": {
+            "type": "number",
+            "title": "Promise Days"
+          },
+          "late_pct": {
+            "type": "number",
+            "title": "Late Pct"
+          },
+          "olist_promise_days": {
+            "type": "number",
+            "title": "Olist Promise Days"
+          },
+          "olist_late_pct": {
+            "type": "number",
+            "title": "Olist Late Pct"
+          },
+          "delta_days": {
+            "type": "number",
+            "title": "Delta Days"
+          },
+          "delta_days_pct": {
+            "type": "number",
+            "title": "Delta Days Pct"
+          },
+          "delta_late_pts": {
+            "type": "number",
+            "title": "Delta Late Pts"
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone"
+          },
+          "monthly": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Monthly"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantile",
+          "risk_label",
+          "risk_description",
+          "promise_days",
+          "late_pct",
+          "olist_promise_days",
+          "olist_late_pct",
+          "delta_days",
+          "delta_days_pct",
+          "delta_late_pts",
+          "verdict",
+          "tone",
+          "monthly"
+        ],
+        "title": "PromiseComparisonOut"
+      },
+      "QuantileDays": {
+        "properties": {
+          "quantile": {
+            "type": "number",
+            "title": "Quantile"
+          },
+          "days": {
+            "type": "number",
+            "title": "Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantile",
+          "days"
+        ],
+        "title": "QuantileDays"
+      },
+      "RiskScoreOut": {
+        "properties": {
+          "predicted_days": {
+            "type": "number",
+            "title": "Predicted Days"
+          },
+          "promised_days": {
+            "type": "number",
+            "title": "Promised Days"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "Durée prédite − promesse (jours) ; plus il est élevé, plus le risque est fort"
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "examples": [
+              "Élevé"
+            ]
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone"
+          },
+          "thresholds": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Thresholds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "predicted_days",
+          "promised_days",
+          "score",
+          "level",
+          "tone",
+          "thresholds"
+        ],
+        "title": "RiskScoreOut"
+      },
+      "StateOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name"
+        ],
+        "title": "StateOut"
+      },
+      "SteeringOut": {
+        "properties": {
+          "capacity": {
+            "type": "number",
+            "title": "Capacity"
+          },
+          "cost_fn": {
+            "type": "number",
+            "title": "Cost Fn"
+          },
+          "cost_fp": {
+            "type": "number",
+            "title": "Cost Fp"
+          },
+          "prevent_rate": {
+            "type": "number",
+            "title": "Prevent Rate"
+          },
+          "n_orders": {
+            "type": "integer",
+            "title": "N Orders"
+          },
+          "n_late": {
+            "type": "integer",
+            "title": "N Late"
+          },
+          "n_flagged": {
+            "type": "integer",
+            "title": "N Flagged"
+          },
+          "true_positives": {
+            "type": "integer",
+            "title": "True Positives"
+          },
+          "false_positives": {
+            "type": "integer",
+            "title": "False Positives"
+          },
+          "precision": {
+            "type": "number",
+            "title": "Precision"
+          },
+          "recall": {
+            "type": "number",
+            "title": "Recall"
+          },
+          "lift": {
+            "type": "number",
+            "title": "Lift"
+          },
+          "base_rate": {
+            "type": "number",
+            "title": "Base Rate"
+          },
+          "net_benefit": {
+            "type": "number",
+            "title": "Net Benefit"
+          },
+          "breakeven_precision": {
+            "type": "number",
+            "title": "Breakeven Precision"
+          },
+          "profitable": {
+            "type": "boolean",
+            "title": "Profitable"
+          },
+          "best_capacity_pct": {
+            "type": "number",
+            "title": "Best Capacity Pct"
+          },
+          "best_net_benefit": {
+            "type": "number",
+            "title": "Best Net Benefit"
+          },
+          "curve": {
+            "items": {
+              "$ref": "#/components/schemas/CurvePoint"
+            },
+            "type": "array",
+            "title": "Curve"
+          }
+        },
+        "type": "object",
+        "required": [
+          "capacity",
+          "cost_fn",
+          "cost_fp",
+          "prevent_rate",
+          "n_orders",
+          "n_late",
+          "n_flagged",
+          "true_positives",
+          "false_positives",
+          "precision",
+          "recall",
+          "lift",
+          "base_rate",
+          "net_benefit",
+          "breakeven_precision",
+          "profitable",
+          "best_capacity_pct",
+          "best_net_benefit",
+          "curve"
+        ],
+        "title": "SteeringOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "description": "Requise uniquement si la variable ECI_API_KEY est définie",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Santé",
+      "description": "Disponibilité du service"
+    },
+    {
+      "name": "Méta",
+      "description": "Métadonnées et options"
+    },
+    {
+      "name": "KPI",
+      "description": "Vue d'ensemble"
+    },
+    {
+      "name": "Modèle 1 · Durée de livraison",
+      "description": "Promesse et durée"
+    },
+    {
+      "name": "Modèle 2 · Risque de retard",
+      "description": "Alertes et score"
+    },
+    {
+      "name": "Modèle 3 · Segments clients",
+      "description": "Segmentation"
+    }
+  ]
+}

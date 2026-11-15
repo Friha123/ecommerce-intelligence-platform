@@ -1,0 +1,11 @@
+{
+  "final_variant": "B · sans proxys du temps",
+  "trained_on_rows": 4785,
+  "training_end": "2018-08-31 21:48:13",
+  "rolling_mae": 3.8894036161475696,
+  "best_baseline": "Médiane par état (historique)",
+  "best_baseline_mae": 3.9150270653727834,
+  "olist_promise_mae": 18.207135258475063,
+  "recency_weighting": false,
+  "half_life_days": null
+}

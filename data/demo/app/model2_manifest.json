@@ -1,0 +1,16 @@
+{
+  "final_approach": "Régression L1 : écart durée - promesse",
+  "trained_on_rows": 4785,
+  "training_end": "2018-08-31 21:48:13",
+  "rolling_roc_auc": 0.8937362101354718,
+  "rolling_gain": 21.226653715619726,
+  "test_roc_auc_static": 0.9059549745824256,
+  "cost_fp": 1.0,
+  "cost_fn_grid": [
+    3,
+    5,
+    10,
+    20,
+    30
+  ]
+}

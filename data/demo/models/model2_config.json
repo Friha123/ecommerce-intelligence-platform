@@ -1,0 +1,80 @@
+{
+ "approach": "Régression L1 : écart durée - promesse",
+ "features": [
+  "nb_items",
+  "multi_seller",
+  "total_price",
+  "total_freight",
+  "total_weight_g",
+  "total_volume_cm3",
+  "weight_imputed",
+  "freight_ratio",
+  "limit_days",
+  "distance_km",
+  "distance_imputed",
+  "same_state",
+  "customer_lat",
+  "customer_lng",
+  "seller_lat",
+  "seller_lng",
+  "payment_installments",
+  "purchase_dow",
+  "purchase_hour",
+  "is_weekend",
+  "is_black_friday_week",
+  "seller_n_past",
+  "seller_mean_days",
+  "seller_late_rate",
+  "route_n_past",
+  "route_mean_days",
+  "route_late_rate",
+  "log_total_price",
+  "log_total_freight",
+  "log_total_weight_g",
+  "log_total_volume_cm3",
+  "log_distance_km",
+  "customer_state",
+  "seller_state",
+  "categorie_grouped",
+  "payment_type",
+  "promised_days"
+ ],
+ "levels": {
+  "customer_state": [
+   "AL",
+   "BA",
+   "MG",
+   "PE",
+   "PR",
+   "RJ",
+   "RS",
+   "SP"
+  ],
+  "seller_state": [
+   "MG",
+   "PR",
+   "RJ",
+   "SP"
+  ],
+  "categorie_grouped": [
+   "audio",
+   "bed_bath_table",
+   "health_beauty",
+   "office_furniture",
+   "pc_gamer",
+   "sports_leisure",
+   "unknown"
+  ],
+  "payment_type": [
+   "boleto",
+   "credit_card",
+   "voucher"
+  ]
+ },
+ "thresholds_rank_on_test": {
+  "top_5": -9.520932846332814,
+  "top_10": -11.341259670831391,
+  "top_20": -13.069350460722845
+ },
+ "alpha_quantile": null
+}

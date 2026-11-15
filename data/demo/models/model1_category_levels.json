@@ -1,0 +1,32 @@
+{
+ "customer_state": [
+  "AL",
+  "BA",
+  "MG",
+  "PE",
+  "PR",
+  "RJ",
+  "RS",
+  "SP"
+ ],
+ "seller_state": [
+  "MG",
+  "PR",
+  "RJ",
+  "SP"
+ ],
+ "categorie_grouped": [
+  "audio",
+  "bed_bath_table",
+  "health_beauty",
+  "office_furniture",
+  "pc_gamer",
+  "sports_leisure",
+  "unknown"
+ ],
+ "payment_type": [
+  "boleto",
+  "credit_card",
+  "voucher"
+ ]
+}
